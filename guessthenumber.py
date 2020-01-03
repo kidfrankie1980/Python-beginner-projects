@@ -1,59 +1,74 @@
-#Guess The Number 
-#Write a programme where the computer randomly generates a 
-#number between 0 and 20. The user needs to guess what the 
-#number is. If the user guesses wrong, tell them their guess 
-#is either too high, or too low. This will get you started 
-#with the random library if you haven't already used it.
+#Password Generator
+#Write a programme, which generates a random password for the user. 
+#Ask the user how long they want their password to be, and how many letters and numbers they want in their password. 
+#Have a mix of upper and lowercase letters, as well as numbers and symbols. 
+#The password should be a minimum of 6 characters long.
 
 import random
-import time
+import string
 
-#This function ask to play again Y or No
-def playagain():
-	user= input('Do you want to play again?: Y or N: \n').strip().lower()
+# Function to ask for length of password
+def ask_user_length():
+	length = input('Select length of Password\nMinimum of 6 characters: \n').strip()
 
-	if user == 'y':
-		return True
-	elif user == 'n':
-		return False
-	else:
-		print('invailed guess. try again')
-		return playagain()
+	try:
+		if int(length) < 6:
+			print('Password too short. Minimum 6 Characters')
+			return ask_user_length()
+		else:
+			return int(length)
+	except ValueError:
+		print('Not a number. Select a Number')
+		return ask_user_length()
 
-guess = ''
-playgame = True
-
-while playgame != False:
-	starttime= time.time()
-	solution = random.randrange(0,20,1)
-	print(solution)
+# Function to ask for number of numbers in password
+def ask_user_number():
+	noofno = input('Select number of numbers in password:\nNote: the remaining characters will be letters\n').strip()
 	
-	while guess != solution:
-		try:	
-			guess = int(input('Please Enter a number between 0 - 20: \n'))
-		except ValueError:
-			print ("Not a number. Try again!")
-			continue
+	try:
+		if int(noofno) > plength:
+			print('selected number is larger than password')
+			return ask_user_number()
+		else:
+			return int(noofno)
+	except ValueError:
+		print('Not a number. Select a Number')
+		return ask_user_number()
 
-		if guess < solution:
-			print('Your guess is too low')
-		if guess > solution:
-			print('Your guess is too high')		
+# Function to return number of letters
+def ask_user_letter():
+	return int(plength - pnoofno)
 
+#Main program
+plength = ask_user_length()
+pnoofno = ask_user_number()
+pnoofletter = ask_user_letter()
 
-		if int(guess) == solution:
-			break
-	
-	print('Correct! The solution was:  ' + str(solution))
-	print('Completed in %s' % (time.time() - starttime))
+#All printable characters except spaces, new lines and numbers
+printable = string.printable
+printable = printable[+10:-4]
 
-	playgame = playagain()
+# Create empty arrays
+numberarray = [0]*pnoofno
+letterarray = [None]*pnoofletter
 
+# Randomise numbers into array over request length
+i=0
+while i < pnoofno:
+	numberarray[i] = random.randint(0,9)
+	i += 1
 
+# Randomise all printable characters into array
+i=0
+while i < pnoofletter:
+	letterarray[i] = random.choice(printable)
+	i += 1
 
+# Join arrays and shuffle
+passarray= numberarray + letterarray
+random.shuffle(passarray)
 
+# Write array into string.
+password = ''.join([str(item) for item in passarray ])
 
-
-
-
-
+print('You password is:\n',password)
